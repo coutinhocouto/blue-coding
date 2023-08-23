@@ -1,43 +1,40 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getGifs } from "./hooks/Hooks";
-import Items from "./components/Item";
-import Loader from "./components/Loader";
+import Actions from "@/components/Actions";
+import Form from "@/components/Form";
+import Items from "@/components/Item";
+import Loader from "@/components/Loader";
+import { useState } from "react";
+import { getGifs } from "@/hooks/Hooks";
 
 export default function Home() {
   const [search, setSearch] = useState("");
   const [searchVal, setSearchVal] = useState("");
-  const [show, setShow] = useState(false);
+  const [pagination, setPagination] = useState(0);
+  const [loadMore, setLoadMore] = useState(25);
 
-  const { gifs, isLoadingGifs } = getGifs(search);
-
-  const clearResults = () => {
-    setSearchVal('');
-    setSearch('');
-  }
-
-  /*useEffect(() => [
-
-  ],[]);*/
+  const { gifs, isLoadingGifs } = getGifs(searchVal, loadMore, pagination);
 
   return (
     <main>
-      <input
-        type="search"
-        placeholder="Search..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
+      <Form
+        search={search}
+        setSearch={setSearch}
+        setSearchVal={setSearchVal}
+        setPagination={setPagination}
+        setLoadMore={setLoadMore}
       />
-      <button type="button" onClick={() => setSearchVal(search)}>
-        Search Gif
-      </button>
-      <button type="button" onClick={() => clearResults()}>
-        Clear Results
-      </button>
-      {!isLoadingGifs && searchVal &&
-        <Items gifs={gifs} />
-      }
+      {isLoadingGifs && searchVal && <Loader />}
+      {!isLoadingGifs && searchVal && <Items gifs={gifs} />}
+      {!isLoadingGifs && searchVal && (
+        <Actions
+          pagination={pagination}
+          loadMore={loadMore}
+          setPagination={setPagination}
+          setLoadMore={setLoadMore}
+          gifs={gifs}
+        />
+      )}
     </main>
   );
 }

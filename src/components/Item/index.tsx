@@ -1,11 +1,12 @@
 import Item from "./Item";
 import { ItemHolder } from "./styles";
+import { GifsProps } from "./types";
 
-export default function Items({ gifs }) {
+export default function Items({ gifs } : GifsProps) {
   if (gifs.data) {
     return (
       <ItemHolder>
-        {gifs.data.map((e: { images: any; url: string; id: string }) => (
+        {gifs.data.map((e) => (
           <Item key={e.id} images={e.images} />
         ))}
       </ItemHolder>
